@@ -6,6 +6,16 @@ RAVELRY_PASSWORD = os.environ.get('RAVELRY_PASSWORD')
 
 BASE_URL = 'https://api.ravelry.com/'
 
+def user_is_valid(username):
+    """ Checks if username is valid and returns True if yes, False if no """ 
+
+    response = requests.get((BASE_URL + f"people/{username}.json"),
+                            auth=requests.auth.HTTPBasicAuth(RAVELRY_USERNAME, RAVELRY_PASSWORD),
+                            )
+    if response:
+        return True
+    return False
+
 
 def get_from_ravelry(get_type, search_params, response_key):
     """ Takes in string url ending, parameters dict and returns ravelry dict. """
@@ -42,13 +52,15 @@ def get_user_favs(username):
 
     favs_url = f'people/{username}/favorites/list.json'
     # included page size in params because default is only 50
-    favs_results = get_from_ravelry(favs_url, {'page_size':200}, 'favorites')
+    favs_results = get_from_ravelry(favs_url, 
+                                    {'type':'pattern',
+                                    'page_size':100}, 
+                                    'favorites')
     fav_patts = []
 
     for result in favs_results: #refactor w/ list comprehension?
         pattern_id = result['favorited']['id']
-        if pattern_id:
-            fav_patts.append(pattern_id)
+        fav_patts.append(pattern_id)
 
     return fav_patts
 
@@ -59,8 +71,14 @@ def get_user_queue(username):
     que = f'people/{username}/queue/list.json'
     # include large page size in params because default is only 50
     que_results = get_from_ravelry(que, {'page_size':500}, 'queued_projects')
+    que_patts = []
 
-    return que_results
+    for result in que_results:
+        pattern_id = result['pattern_id']
+        if pattern_id:
+            que_patts.append(pattern_id)
+
+    return que_patts
 
 
 def get_user_library(username):
