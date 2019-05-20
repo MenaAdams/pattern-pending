@@ -1,22 +1,44 @@
 {% extends 'base.html' %}
-
 {% block title %} Search {% endblock %}
-
+{% block head %}
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+{% endblock %}
 {% block body %}
+Search by: 
+<button name="yarn-search" id="yarn-search">Yarn!</button>
+<button name="patt-type-button" id ="patt-type-button">Category!</button>
+<button name="search_w_both" id="search_w_both">Both!</button>
 
-<form action="/search-rav">
-    <select name="yarn">
-        {% for yarn in yarns %}
-        <option value="{{ yarn }}" name="yarn">{{ yarn }}</option>
-        {% endfor %}
-    </select>
-    
-    <select name="pattern_type">
-        {% for pattern_type in pattern_types %}
-        <option value="{{ pattern_type }}">{{ pattern_type }}</option>
-        {% endfor %}
-    </select>
+<form action="/search-rav" id="search-form" hidden>
+    <div id="yarn-dropdown" hidden>
+        <h2 class="yarn">What kind of yarn do you want to use?</h2>
+        <select name="yarn" class="yarn">
+            <option value="">Yarn</option>
+            {% for yarn in yarns %}
+            <option value="{{ yarn }}" name="yarn">{{ yarn }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="pattern_dropdown" hidden>
+        <h2 class="pattern_type">What kind of item do you want to make?</h2>
+        <select name="pattern_type" class="pattern_type">
+            <option value="">Category</option>
+            {% for pattern_type in pattern_types %}
+            <option value="{{ pattern_type }}">{{ pattern_type }}</option>
+            {% endfor %}
+        </select>
+    </div>
     <input type="submit">
 </form>
+
+<div id="search-results">
+</div>
+
+<script src="search.jsx" type="text/jsx"></script>
+<script src="static/search.js"></script>
 
 {% endblock %}
