@@ -105,4 +105,4 @@ def get_pattern_by_id(pattern_id):
                             )
     pattern = response.json()
 
-    return pattern
+    return pattern['pattern']

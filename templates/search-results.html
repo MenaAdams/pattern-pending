@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %} Results {% endblock %}
+
+{% block body %}
+
+{% for pattern in patterns %}
+
+<div id="{{ permalink }}" class="pattern">
+  <b>{{ pattern.name }}</b><br>
+  <a href="{{ pattern.url }}">
+      <img src="{{ pattern.photos[0] }}">
+  </a>
+</div>
+
+{% endfor %}
+
+{% endblock %}

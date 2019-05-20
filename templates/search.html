@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %} Search {% endblock %}
+
+{% block body %}
+
+<form action="/search-rav">
+    <select name="yarn">
+        {% for yarn in yarns %}
+        <option value="{{ yarn }}" name="yarn">{{ yarn }}</option>
+        {% endfor %}
+    </select>
+    
+    <select name="pattern_type">
+        {% for pattern_type in pattern_types %}
+        <option value="{{ pattern_type }}">{{ pattern_type }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit">
+</form>
+
+{% endblock %}
