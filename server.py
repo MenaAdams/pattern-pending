@@ -6,7 +6,7 @@ import requests
 import api
 import random
 from flask import Flask, render_template, request, flash, redirect, session
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 app.secret_key = "G59Q#m$HWvhMYs#Kuw#nT7eeKF%@ofoBhUBz4MZrF0UUvN5s#*8CB4l!B#Uz9Ob@xW4m#8VRf88"
@@ -20,12 +20,12 @@ class Pattern:
     def __init__(self, pattern_id):
         pattern_info = api.get_pattern_by_id(pattern_id)
         self.name = pattern_info['name']
+        self.pattern_id = pattern_id
         self.permalink = pattern_info['permalink']
         self.url = self.url + self.permalink
         self.photos = []
         for photo in pattern_info['photos']:
             self.photos.append(photo['medium2_url'])
-        # self.photo_url = pattern_info['photos'][0]['medium2_url'] #grabs first photo
 
 
 @app.route("/")
@@ -78,7 +78,6 @@ def display_search_rav():
                     'weight': yarn_type, 
                     'pc': pattern_type,
                     }
-    print(search_params)
     search_results = api.search_rav(search_params)
     pattern_ids = random.choices(search_results, k=6)
     patterns = []
@@ -91,4 +90,4 @@ def display_search_rav():
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)

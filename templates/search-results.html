@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block title %} Results {% endblock %}
-
+{% block head %}
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+{% endblock %}
 {% block body %}
-
+<h1>Results!</h1>
+<div id="patterns">
 {% for pattern in patterns %}
 
 <div id="{{ permalink }}" class="pattern">
@@ -14,5 +20,11 @@
 </div>
 
 {% endfor %}
+</div>
+<!-- 
+Try again doesn't work... Implement Q/F/L display first.
+<button id="try-again">Try Again?</button>
+
+<script src="static/search-results.js"></script> -->
 
 {% endblock %}
