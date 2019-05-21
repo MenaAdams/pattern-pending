@@ -87,7 +87,10 @@ def display_search_rav():
                     'weight': session['yarn_type'], 
                     'pc': session['pattern_type'],
                     }
-    search_results = api.search_rav(search_params)
+
+    search_results = api.search_rav(search_params) 
+    #maybe add search results in session so I'm not recalling the api 
+    #when I hit the "try again" button
 
     pattern_ids = random.choices(search_results, k=6)
     patterns = []
