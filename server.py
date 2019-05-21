@@ -36,19 +36,19 @@ def homepage():
 
 @app.route("/rav-data")
 def get_users_rav_data():
-    """ Grab user's personal ravelry data"""
+    """ Grab user's personal ravelry data. """
     username = request.args.get('username')
 
     if api.user_is_valid(username):
-        user_patts = []
-        user_data_functions = [api.get_user_favs(username),
-                            api.get_user_queue(username),
-                            api.get_user_library(username)]
-        for funct in user_data_functions:
-            patts = funct
-            user_patts.append(patts)
+        user_patts = {
+                    'f': api.get_user_favs(username), 
+                    'q': api.get_user_queue(username), 
+                    'l': api.get_user_library(username)
+                    }
         session['user_patts'] = user_patts
+        print(session['user_patts'])
         return redirect('/search')
+
     else:
         flash(f'"{username}" is not a valid ravelry account. Please try again.')
         return redirect('/')
@@ -56,6 +56,7 @@ def get_users_rav_data():
 
 @app.route("/search")
 def render_search_page():
+    """ Display search page to get user search criteria. """
 
     yarns = ['lace', 'fingering', 'sport', 'dk', 'worsted', 'bulky']
     pattern_types = ['slippers', 'socks', 'hat', 'gloves', 'mittens', 
@@ -67,18 +68,27 @@ def render_search_page():
                             pattern_types=pattern_types,
                             )
 
-
-@app.route("/search-rav")
-def display_search_rav():
+@app.route("/search-data")
+def get_search_criteria():
 
     yarn_type = request.args.get('yarn')
     pattern_type = request.args.get('pattern_type')
 
+    session['yarn_type'] = yarn_type
+    session['pattern_type']= pattern_type
+
+    return redirect('/search-rav') 
+
+
+@app.route("/search-rav")
+def display_search_rav():
+
     search_params = {'craft': 'knitting',
-                    'weight': yarn_type, 
-                    'pc': pattern_type,
+                    'weight': session['yarn_type'], 
+                    'pc': session['pattern_type'],
                     }
     search_results = api.search_rav(search_params)
+
     pattern_ids = random.choices(search_results, k=6)
     patterns = []
 
