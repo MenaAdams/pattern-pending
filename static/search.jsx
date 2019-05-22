@@ -18,16 +18,21 @@ class SearchFilter extends React.Component {
     const yarns = ['lace', 'fingering', 'sport', 'dk', 'worsted', 'bulky']; 
     const yarnOptions = [];
     for (const yarn of yarns) {
-      const option = <option key={yarn} value={yarn} name="yarn">{yarn}</option>;
+      const option = <option key={yarn} value={yarn} className="yarn">{yarn}</option>;
       yarnOptions.push(option);
     }
     const patternTypes = ['slippers', 'socks', 'hat', 'gloves', 'mittens', 
-                        'fingerless gloves','purse', 'cowl', 'scarf', 'shawl', 
-                        'blanket', 'pullover', 'cardigan'];
+                        ['fingerless','fingerless gloves'],'purse', 'cowl', 'scarf', 
+                        ['shawl-wrap', 'shawl'], 'blanket', 'pullover', 'cardigan'];
     const patternOptions = [];
     for (const pType of patternTypes) {
-        const option = <option key={pType} value="{pType}">{pType}</option>;
+      if (typeof pType === 'string') {
+        const option = <option key={pType} value={pType} className="pattern_type">{pType}</option>;
         patternOptions.push(option);
+      } else {
+        const option = <option key={pType[0]} value={pType[0]} className="pattern_type">{pType[1]}</option>;
+        patternOptions.push(option);
+      }
     }
 
     return (       
@@ -62,7 +67,8 @@ class SearchFilter extends React.Component {
             </select>
           </div>
 
-          <div id="pattern_dropdown"
+          <div 
+            id="pattern_dropdown"
             hidden={this.state.activeForm === 'yarn-dropdown'} 
           >
             <h2 className="pattern_type">What kind of item do you want to make?</h2>
