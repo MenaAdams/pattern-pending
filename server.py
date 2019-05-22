@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# from pprint import pformat
 import os
 
 import requests
@@ -41,9 +40,9 @@ def get_users_rav_data():
 
     if api.user_is_valid(username):
         user_patts = {
-                    'f': api.get_user_favs(username), 
-                    'q': api.get_user_queue(username), 
-                    'l': api.get_user_library(username)
+                    'favorites': api.get_user_favs(username), 
+                    'queue': api.get_user_queue(username), 
+                    'library': api.get_user_library(username)
                     }
         session['user_patts'] = user_patts
         print(session['user_patts'])
@@ -57,44 +56,41 @@ def get_users_rav_data():
 @app.route("/search")
 def render_search_page():
     """ Display search page to get user search criteria. """
+    print('your search page!!!!')
+    return render_template('search.html')
 
-    yarns = ['lace', 'fingering', 'sport', 'dk', 'worsted', 'bulky']
-    pattern_types = ['slippers', 'socks', 'hat', 'gloves', 'mittens', 
-                    'fingerless gloves','purse', 'cowl', 'scarf', 'shawl', 
-                    'blanket', 'pullover', 'cardigan']
-
-    return render_template('search.html',
-                            yarns=yarns,
-                            pattern_types=pattern_types,
-                            )
 
 @app.route("/search-data")
 def get_search_criteria():
-
+    """ Save user's search inputs to session. """
+    
     yarn_type = request.args.get('yarn')
     pattern_type = request.args.get('pattern_type')
-
-    session['yarn_type'] = yarn_type
-    session['pattern_type']= pattern_type
+    search_params = {'craft': 'knitting',
+                'weight': yarn_type, 
+                'pc': pattern_type,
+                }
+    print('search params', search_params)
+    search_results = api.search_rav(search_params) 
+    print('your searchresults=', search_results)
+    session['search_results'] = search_results
+    print('got your search results -----------------------------------------')
 
     return redirect('/search-rav') 
 
 
 @app.route("/search-rav")
 def display_search_rav():
+    """ Display random search results plus user relevant patterns. """
+    pattern_ids = random.choices(session['search_results'], k=6)
 
-    search_params = {'craft': 'knitting',
-                    'weight': session['yarn_type'], 
-                    'pc': session['pattern_type'],
-                    }
-
-    search_results = api.search_rav(search_params) 
-    #maybe add search results in session so I'm not recalling the api 
-    #when I hit the "try again" button
-
-    pattern_ids = random.choices(search_results, k=6)
+    for key in session['user_patts'].keys():
+        for patt in session['search_results']:
+            if patt in session['user_patts'][key]: 
+                if not patt in pattern_ids:
+                    pattern_ids.insert(0, patt)
+            
     patterns = []
-
     for patt in pattern_ids:
         patt = Pattern(patt)
         patterns.append(patt)
@@ -102,5 +98,7 @@ def display_search_rav():
     return render_template('search-results.html', patterns=patterns)
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.debug=True
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    app.run(host="0.0.0.0")
     DebugToolbarExtension(app)
