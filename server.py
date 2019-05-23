@@ -45,7 +45,6 @@ def get_users_rav_data():
                     'library': api.get_user_library(username)
                     }
         session['user_patts'] = user_patts
-        print(session['user_patts'])
         return redirect('/search')
 
     else:
@@ -56,7 +55,7 @@ def get_users_rav_data():
 @app.route("/search")
 def render_search_page():
     """ Display search page to get user search criteria. """
-    print('your search page!!!!')
+
     return render_template('search.html')
 
 
@@ -67,14 +66,11 @@ def get_search_criteria():
     yarn_type = request.args.get('yarn')
     pattern_type = request.args.get('pattern_type')
     search_params = {'craft': 'knitting',
-                'weight': yarn_type, 
-                'pc': pattern_type,
-                }
-    print('search params', search_params)
+                    'weight': yarn_type, 
+                    'pc': pattern_type,
+                    }
     search_results = api.search_rav(search_params) 
-    print('your searchresults=', search_results)
     session['search_results'] = search_results
-    print('got your search results -----------------------------------------')
 
     return redirect('/search-rav') 
 
@@ -84,21 +80,18 @@ def display_search_rav():
     """ Display random search results plus user relevant patterns. """
     pattern_ids = random.choices(session['search_results'], k=6)
 
-    for key in session['user_patts'].keys():
+    for key in session['user_patts'].keys(): #please refactor me :O
         for patt in session['search_results']:
             if patt in session['user_patts'][key]: 
                 if not patt in pattern_ids:
                     pattern_ids.insert(0, patt)
             
-    patterns = []
-    for patt in pattern_ids:
-        patt = Pattern(patt)
-        patterns.append(patt)
+    patterns = [Pattern(patt) 
+                for patt in pattern_ids]
 
     return render_template('search-results.html', patterns=patterns)
 
 if __name__ == "__main__":
     app.debug=True
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     app.run(host="0.0.0.0")
     DebugToolbarExtension(app)
