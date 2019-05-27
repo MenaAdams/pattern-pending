@@ -6,6 +6,7 @@ import api
 import random
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
+from model import connect_to_db, db #import my classes
 
 app = Flask(__name__)
 app.secret_key = "G59Q#m$HWvhMYs#Kuw#nT7eeKF%@ofoBhUBz4MZrF0UUvN5s#*8CB4l!B#Uz9Ob@xW4m#8VRf88"
@@ -75,21 +76,29 @@ def get_search_criteria():
     return redirect('/search-rav') 
 
 
+def get_user_results():
+    """ Returns user specific results from session """
+    pattern_ids = set()
+    
+    for patt in session['search_results']:
+        for item in session['user_patts'].keys():
+            if patt in session['user_patts'][item]: 
+                pattern_ids.add(patt)    
+
+    return pattern_ids
+
+
 @app.route("/search-rav")
 def display_search_rav():
     """ Display random search results plus user relevant patterns. """
-    pattern_ids = random.choices(session['search_results'], k=6)
-
-    for key in session['user_patts'].keys(): #please refactor me :O
-        for patt in session['search_results']:
-            if patt in session['user_patts'][key]: 
-                if not patt in pattern_ids:
-                    pattern_ids.insert(0, patt)
+    pattern_ids = set(random.choices(session['search_results'], k=6))
+    pattern_ids.update(get_user_results())
             
     patterns = [Pattern(patt) 
                 for patt in pattern_ids]
 
     return render_template('search-results.html', patterns=patterns)
+
 
 if __name__ == "__main__":
     app.debug=True

@@ -18,7 +18,7 @@ class SearchFilter extends React.Component {
     const yarns = ['lace', 'fingering', 'sport', 'dk', 'worsted', 'bulky']; 
     const yarnOptions = [];
     for (const yarn of yarns) {
-      const option = <option key={yarn} value={yarn} className="yarn">{yarn}</option>;
+      const option = <option key={yarn} value={yarn} className="yarn-weight">{yarn}</option>;
       yarnOptions.push(option);
     }
     const patternTypes = ['slippers', 'socks', 'hat', 'gloves', 'mittens', 
@@ -41,7 +41,7 @@ class SearchFilter extends React.Component {
           name="yarn-search" id="yarn-search" value="yarn-dropdown" 
           onClick={this.handleClick}
         >
-          Yarn!
+        Yarn Weight!
         </button>
         <button 
           name="patt-type-button" id ="patt-type-button" value="pattern-dropdown"
@@ -84,6 +84,7 @@ class SearchFilter extends React.Component {
     );
   }
 }
+
 
 ReactDOM.render(
   <SearchFilter />,
