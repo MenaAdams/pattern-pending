@@ -92,3 +92,12 @@ def get_pattern_by_id(pattern_id):
     pattern = response.json()
 
     return pattern['pattern']
+
+
+def get_users_projects(username):
+    """ Get all of the user's projects. """
+
+    show_projects = f'projects/{username}/list.json'
+    projects_results = get_from_ravelry(show_projects, {}, 'projects')
+
+    return projects_results
