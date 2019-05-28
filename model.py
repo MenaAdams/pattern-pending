@@ -8,37 +8,12 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String(64), nullable=False, unique=True)
-    password = db.Column(db.String(64), nullable=False)
     ravelry_un = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<User user_id={self.user_id} email={self.email}>"
-
-
-class DislikeLike(db.Model):
-    """Patterns that user doesn't want to see."""
-
-    __tablename__ = "dislike_likes"
-
-    dislike_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    pattern_id = db.Column(db.Integer, nullable=False)
-    like = db.Column(db.Boolean, default=False)
-    dislike = db.Column(db.Boolean, default=False)
-
-    user = db.relationship("User", 
-                        backref=db.backref("dislikes_likes"))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return f"""<Id={self.dislike_id} 
-        user_id={self.user_id} 
-        pattern_id={self.pattern_id} 
-        like={self.like} dislike={self.dislike}>"""
+        return f"<User user_id={self.user_id} ravelry_un={self.ravelry_un}>"
 
 
 class Category(db.Model):
@@ -54,8 +29,9 @@ class Category(db.Model):
 
         return f"<List Code {self.list_code} is short for {self.title}>"
 
+
 class Users_Categories(db.Model):
-    """Patterns in user's queues. """
+    """ Patterns in user's queue/library/favorites. """
 
     __tablename__ = "users_cats"
 
@@ -74,6 +50,23 @@ class Users_Categories(db.Model):
         """Provide helpful representation when printed."""
 
         return f"<u_c_id={self.u_c_id} category_code={self.list_code} pattern_id={self.pattern_id} user_id={self.user_id}>"
+
+
+class Projects(db.Model):
+
+    __tablename__ = "projects"
+
+    project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    rav_project_id = db.Column(db.Integer, nullable=False)
+    pattern_id = db.Column(db.Integer, nullable=False) #skip projects that don't have patterns since we can't get patt_type
+    pattern_type = db.Column(db.String(64), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return f"<project_id={self.project_id} user_id={self.user_id} pattern_id={self.pattern_id}"
+
 
 # Helper functions
 
