@@ -89,12 +89,14 @@ def get_pattern_by_id(pattern_id):
     response = requests.get((BASE_URL + show_patt), 
                             auth=requests.auth.HTTPBasicAuth(RAVELRY_USERNAME, RAVELRY_PASSWORD), 
                             )
+    print(pattern_id)
+    print(response)
     pattern = response.json()
 
     return pattern['pattern']
 
 
-def get_users_projects(username):
+def get_user_projects(username):
     """ Get all of the user's projects. """
 
     show_projects = f'projects/{username}/list.json'

@@ -27,10 +27,10 @@ class Category(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<List Code {self.list_code} is short for {self.title}>"
+        return f"<Category Code {self.category_code} is short for {self.title}>"
 
 
-class Users_Categories(db.Model):
+class User_Category(db.Model):
     """ Patterns in user's queue/library/favorites. """
 
     __tablename__ = "users_cats"
@@ -49,10 +49,10 @@ class Users_Categories(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return f"<u_c_id={self.u_c_id} category_code={self.list_code} pattern_id={self.pattern_id} user_id={self.user_id}>"
+        return f"<u_c_id={self.u_c_id} category_code={self.category_code} pattern_id={self.pattern_id} user_id={self.user_id}>"
 
 
-class Projects(db.Model):
+class Project(db.Model):
 
     __tablename__ = "projects"
 
@@ -61,6 +61,7 @@ class Projects(db.Model):
     rav_project_id = db.Column(db.Integer, nullable=False)
     pattern_id = db.Column(db.Integer, nullable=False) #skip projects that don't have patterns since we can't get patt_type
     pattern_type = db.Column(db.String(64), nullable=False)
+    completion_status = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -76,9 +77,20 @@ def connect_to_db(app):
     # Configure to use our PostgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///patterns'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_ECHO'] = False
     db.app = app
     db.init_app(app)
+
+
+def add_categories_to_db():
+    """ Add categories of favories, queue, and library to db. """
+    CATEGORIES = {'fav': 'favorites', 'que':'queue', 'lib':'library'}
+    
+    for cat_code in CATEGORIES:
+        cat = Category(category_code=cat_code, title=CATEGORIES[cat_code])
+        db.session.add(cat)
+
+    db.session.commit()
 
 
 if __name__ == "__main__":

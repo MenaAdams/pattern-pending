@@ -47,7 +47,7 @@ class SearchFilter extends React.Component {
           name="patt-type-button" id ="patt-type-button" value="pattern-dropdown"
           onClick={this.handleClick}
         >
-        Category!
+        Item!
         </button>
         <button 
           name="search_w_both" id="search_w_both" value="both"
@@ -73,7 +73,7 @@ class SearchFilter extends React.Component {
           >
             <h2 className="pattern_type">What kind of item do you want to make?</h2>
             <select name="pattern_type" className="pattern_type">
-                <option value="">Category</option>
+                <option value="">Item</option>
                 {patternOptions}
             </select>
           </div>

@@ -15,14 +15,14 @@
 
 <div id="{{ permalink }}" class="pattern">
   <b>{{ pattern.name }}</b><br>
-  {% for key in session['user_patts'] %}
+  {% for key in user_patts %}
 
-    {% if pattern.pattern_id in session['user_patts'][key] %}
+    {% if pattern.pattern_id in user_patts[key] %}
       <p>This pattern is in your {{ key }}!</p>
     {% endif %}
   {% endfor %}
   <a href="{{ pattern.url }}">
-    <img src="{{ pattern.photos[0] }}">
+    <img src="{{ pattern.photo }}">
   </a>
 </div>
 
