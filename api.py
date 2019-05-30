@@ -51,8 +51,10 @@ def get_user_favs(username):
                                     {'type':'pattern',
                                     'page_size':100}, 
                                     'favorites')
+    print(favs_results)
     fav_patts = [result['favorited']['id']
-                for result in favs_results]
+                for result in favs_results
+                if result['favorited']]
 
     return fav_patts
 
