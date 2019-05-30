@@ -42,6 +42,33 @@ def save_users_rav_data(username):
             db.session.add(pattern)
 
 
+def sort_project_pattern_type(pattern_id):
+    """ Sort default ravelry pattern types into broader, more usable categories. """   
+
+    pattern = api.get_pattern_by_id(pattern_id)
+    pattern_type = pattern['pattern_categories'][0]['name']
+    parent_type = pattern['pattern_categories'][0]['parent']['name']
+    
+    if parent_type == 'Socks':
+        return 'Socks'
+    elif parent_type == 'Hands':
+        return 'Gloves and Mittens'
+    elif parent_type == 'Sweater':
+        return 'Sweaters'
+    elif parent_type == 'Hat':
+        return 'Hat'
+    elif parent_type == 'Softies':
+        return 'Softies'
+    elif pattern_type == 'Blanket':
+        return 'Blankets'
+    elif pattern_type == 'Scarf' or pattern_type == 'Cowl':
+        return 'Scarves and Cowls'
+    elif pattern_type == 'Shawl / Wrap':
+        return 'Shawls and Wraps'
+    else:
+        return 'Other'
+
+
 def save_projects_to_db(username):
     """ Adds user's completed projects to db. """
     user = User.query.filter_by(ravelry_un=username).first()
@@ -52,7 +79,7 @@ def save_projects_to_db(username):
         if pattern_id and project['status_name']:
             completion_status = project['status_name']
             pattern = api.get_pattern_by_id(pattern_id)
-            pattern_type = pattern['pattern_categories'][0]['name']
+            pattern_type = sort_project_pattern_type(pattern_id)
             proj = Project(
                         user_id=user.user_id,
                         rav_project_id=rav_project_id,
@@ -99,6 +126,29 @@ def get_user_patterns():
                 }
 
     return user_patts
+
+def calculate_project_stats():
+    """ """
+    #note these sums include projects at all levels of completion
+    #maybe break out these calculations into a different file?
+    sql_sums = """
+    SELECT pattern_type, count(*)
+    FROM projects
+    JOIN users USING (user_id)
+    WHERE users.ravelry_un = :username
+    GROUP BY pattern_type;
+    """
+    sql_total = """ 
+    SELECT users., count(*)
+    FROM projects
+    JOIN users USING (user_id)
+    WHERE users.ravelry_un = :username
+    GROUP BY user_id;
+    """
+    sums = db.session.execute(sql_sums, {"username": session['user_name']}).fetchall()
+    # sums is a list of tuples, (pattern_type, sum)
+    total = db.session.execute(sql_sums, {"username": session['user_name']}).fetchone()
+    #total is a tuple (username, total)
 
 
 @app.route("/") 
