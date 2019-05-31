@@ -10,9 +10,15 @@
 {% block body %}
   <h1>Your Projects (By Percent)</h1>
     <div class="pattern-chart">
-      <canvas id="donutChart"></canvas>
+      <canvas id="patternChart"></canvas>
       <div id="donutLegend" class="chart-legend"></div>
     </div>
+
+  <h1>Your Project Progress (By Percent)</h1>
+  <div class="completion-chart">
+    <canvas id="completionChart"></canvas>
+    <div id="donutLegend" class="chart-legend"></div>
+  </div>
 
 {% endblock %}
 
@@ -22,15 +28,24 @@
     //   responsive: true
     // };
 
-    let ctx_donut = $("#donutChart").get(0).getContext("2d");
-
+    let ctx_donut = $("#patternChart").get(0).getContext("2d");
     $.get("/pattern-types.json", function (data) {
       let myDonutChart = new Chart(ctx_donut, {
                                               type: 'doughnut',
                                               data: data,
                                               // options: options
                                             });
-      $('#donutLegend').html(myDonutChart.generateLegend());
+      // $('#donutLegend').html(myDonutChart.generateLegend());
+    });
+
+    let ctx_donut2 = $("#completionChart").get(0).getContext("2d");
+    $.get("/completion-status.json", function (data) {
+      let myDonutChart = new Chart(ctx_donut2, {
+                                              type: 'doughnut',
+                                              data: data,
+                                              // options: options
+                                            });
+      // $('#donutLegend').html(myDonutChart.generateLegend());
     });
   </script>
 {% endblock %}

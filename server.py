@@ -7,7 +7,7 @@ from flask import Flask, render_template, request, flash, redirect, session, jso
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Category, User_Category, Project
 from ravelry import (Pattern, save_users_rav_data, sort_pattern_type, save_projects_to_db,
-    check_database_for_user, get_user_patterns)
+    check_database_for_user, get_user_patterns, get_user_results)
 
 
 app = Flask(__name__)
@@ -70,17 +70,17 @@ def get_search_criteria():
     return redirect('/search-rav') 
 
 @app.route('/pattern-types.json')
-def pattern_types_data():
+def get_pattern_types_data():
     """Return data about User's projets ."""
     user = User.query.filter_by(ravelry_un=session['username']).first()
-    sums, total = user.calculate_project_stats() #([(pattern_type, sum)...], (username, total)
+    sums, total = user.calculate_project_stats() #([(pattern_type, sum),...], total)
     colors = ['#FFDAD6', '#F3E8B4', '#B9E795', '#79DC95', '#5ECED0', '#4666C4', '#7130B9', '#AD1C85', '#A10A13']
     
     data_dict = {
                 "labels": [sum[0]for sum in sums],
                 "datasets": [
                     {
-                        "data": [(sum[1]/total[1])*10 for sum in sums],
+                        "data": [int((sum[1]/total) * 100) for sum in sums],
                         "backgroundColor": colors[:len(sums)],
                         "hoverBackgroundColor": colors[:len(sums)]
                     }]
@@ -88,23 +88,30 @@ def pattern_types_data():
 
     return jsonify(data_dict)
 
+
+@app.route('/completion-status.json')
+def get_completion_status_data():
+    """Return data about User's projets ."""
+    user = User.query.filter_by(ravelry_un=session['username']).first()
+    sums, total = user.calculate_project_status_stats() #([(completion_status, sum),...], total)
+    colors = ['#A10A13', '#79DC95', '#4666C4', '#FFDAD6']
+    
+    data_dict = {
+                "labels": [sum[0]for sum in sums],
+                "datasets": [
+                    {
+                        "data": [int((sum[1]/total) * 100) for sum in sums],
+                        "backgroundColor": colors[:len(sums)],
+                        "hoverBackgroundColor": colors[:len(sums)]
+                    }]
+            }
+
+    return jsonify(data_dict)   
+
 @app.route('/user')
 def display_user_charts():
 
     return render_template('userpage.html')
-
-
-def get_user_results():
-    """ Returns user specific results from session """
-    pattern_ids = set()
-    user_patts = get_user_patterns()
-
-    for patt in session['search_results']:
-        for category in user_patts:
-            if patt in user_patts[category]: 
-                pattern_ids.add(patt)  
-
-    return pattern_ids
 
 
 @app.route("/search-rav")

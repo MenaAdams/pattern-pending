@@ -25,23 +25,29 @@ class User(db.Model):
         WHERE users.ravelry_un = :username
         GROUP BY pattern_type;
         """
-        sql_total = """ 
-        SELECT user_id, count(*)
-        FROM projects
-        JOIN users USING (user_id)
-        WHERE users.ravelry_un = :username
-        GROUP BY user_id;
-        """
         sums = db.session.execute(sql_sums, {"username": self.ravelry_un}).fetchall()
         # sums is a list of tuples, (pattern_type, sum)
-        total = db.session.execute(sql_sums, {"username": self.ravelry_un}).fetchone()
-        #total is a tuple (username, total)
+        total = 0
+        for item in sums:
+            total += item[1]
 
         return (sums, total)
 
     def calculate_project_status_stats(self):
-        pass
+        sql_sums = """
+        SELECT completion_status, count(*)
+        FROM projects
+        JOIN users USING (user_id)
+        WHERE users.ravelry_un = :username
+        GROUP BY completion_status;
+        """
+        sums = db.session.execute(sql_sums, {"username": self.ravelry_un}).fetchall()
+        # sums is a list of tuples, (pattern_type, sum)
+        total = 0
+        for item in sums:
+            total += item[1]
 
+        return (sums, total)
 
 
 class Category(db.Model):

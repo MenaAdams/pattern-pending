@@ -39,7 +39,7 @@ def sort_pattern_type(pattern_id):
         'Hands': 'Gloves and Mittens',
         'Sweater': 'Sweaters',
         'Hat': 'Hat',
-        'Softies': 'Softies'
+        'Softies': 'Plushies'
     }
     pattern_types = {
         'Scarf': 'Scarves and Cowls',
@@ -118,3 +118,15 @@ def get_user_patterns():
                 }
 
     return user_patts
+
+def get_user_results():
+    """ Returns user specific results from session """
+    pattern_ids = set()
+    user_patts = get_user_patterns()
+
+    for patt in session['search_results']:
+        for category in user_patts:
+            if patt in user_patts[category]: 
+                pattern_ids.add(patt)  
+
+    return pattern_ids
