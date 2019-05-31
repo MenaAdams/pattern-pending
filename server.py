@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import os
-
 import requests
 import api
 import random
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Category, User_Category, Project
+from ravelry import (Pattern, save_users_rav_data, sort_pattern_type, save_projects_to_db,
+    check_database_for_user, get_user_patterns)
+
 
 app = Flask(__name__)
 app.secret_key = "G59Q#m$HWvhMYs#Kuw#nT7eeKF%@ofoBhUBz4MZrF0UUvN5s#*8CB4l!B#Uz9Ob@xW4m#8VRf88"
@@ -14,151 +16,15 @@ app.secret_key = "G59Q#m$HWvhMYs#Kuw#nT7eeKF%@ofoBhUBz4MZrF0UUvN5s#*8CB4l!B#Uz9O
 RAVELRY_USERNAME = os.environ.get('RAVELRY_USERNAME')
 RAVELRY_PASSWORD = os.environ.get('RAVELRY_PASSWORD')
 
-class Pattern:
-    url = 'https://www.ravelry.com/patterns/library/'
 
-    def __init__(self, pattern_id):
-        pattern_info = api.get_pattern_by_id(pattern_id)
-        self.name = pattern_info['name']
-        self.pattern_id = pattern_id
-        self.permalink = pattern_info['permalink']
-        self.url = self.url + self.permalink
-        self.photo = pattern_info['photos'][0]['medium2_url']
-
-
-def save_users_rav_data(username):
-    """ Adds patterns in users queue, favorites, and library to database. """
-    user = User.query.filter_by(ravelry_un=username).first()
-    user_patts = {
-                'fav': api.get_user_favs(username), 
-                'que': api.get_user_queue(username), 
-                'lib': api.get_user_library(username)
-                }  
-    for category_code in user_patts:
-        for pattern_id in user_patts[category_code]:
-            pattern = User_Category(category_code=category_code,
-                                    pattern_id=pattern_id,
-                                    user_id=user.user_id)
-            db.session.add(pattern)
-
-
-def sort_project_pattern_type(pattern_id):
-    """ Sort default ravelry pattern types into broader, more usable categories. """   
-
-    pattern = api.get_pattern_by_id(pattern_id)
-    pattern_type = pattern['pattern_categories'][0]['name']
-    parent_type = pattern['pattern_categories'][0]['parent']['name']
-    
-    if parent_type == 'Socks':
-        return 'Socks'
-    elif parent_type == 'Hands':
-        return 'Gloves and Mittens'
-    elif parent_type == 'Sweater':
-        return 'Sweaters'
-    elif parent_type == 'Hat':
-        return 'Hat'
-    elif parent_type == 'Softies':
-        return 'Softies'
-    elif pattern_type == 'Blanket':
-        return 'Blankets'
-    elif pattern_type == 'Scarf' or pattern_type == 'Cowl':
-        return 'Scarves and Cowls'
-    elif pattern_type == 'Shawl / Wrap':
-        return 'Shawls and Wraps'
-    else:
-        return 'Other'
-
-
-def save_projects_to_db(username):
-    """ Adds user's completed projects to db. """
-    user = User.query.filter_by(ravelry_un=username).first()
-    projects = api.get_user_projects(username)
-    for project in projects:
-        rav_project_id = project['id']
-        pattern_id = project['pattern_id']
-        if pattern_id and project['status_name']:
-            completion_status = project['status_name']
-            pattern = api.get_pattern_by_id(pattern_id)
-            pattern_type = sort_project_pattern_type(pattern_id)
-            proj = Project(
-                        user_id=user.user_id,
-                        rav_project_id=rav_project_id,
-                        pattern_id=pattern_id,
-                        pattern_type=pattern_type,
-                        completion_status=completion_status,
-                        )
-            db.session.add(proj)
-
-
-def check_database_for_user(username):
-    """ Checks database for user and adds them if they're not there. """
-    user = User.query.filter_by(ravelry_un=username).first()
-
-    if not user:
-        user = User(ravelry_un=username)
-        db.session.add(user)
-        save_users_rav_data(username)
-        save_projects_to_db(username)
-        db.session.commit()
-        flash(f"Added {user.ravelry_un}'s information")
-
-    else:
-        flash(f'Retrieving {user.ravelry_un}\'s information...')
-
-    session['username'] = user.ravelry_un
-
-
-def get_user_patterns():
-    """ Get user patterns from db. """
-    user_patts= {
-                'favorites': [result.pattern_id
-                    for result in User_Category.query.filter(
-                    User.ravelry_un==session['username'], 
-                    User_Category.category_code == 'fav').all()],
-                'queue': [result.pattern_id
-                    for result in User_Category.query.filter(
-                    User.ravelry_un==session['username'], 
-                    User_Category.category_code == 'que').all()],
-                'library': [result.pattern_id
-                    for result in User_Category.query.filter(
-                    User.ravelry_un==session['username'], 
-                    User_Category.category_code == 'lib').all()]
-                }
-
-    return user_patts
-
-def calculate_project_stats():
-    """ """
-    #note these sums include projects at all levels of completion
-    #maybe break out these calculations into a different file?
-    sql_sums = """
-    SELECT pattern_type, count(*)
-    FROM projects
-    JOIN users USING (user_id)
-    WHERE users.ravelry_un = :username
-    GROUP BY pattern_type;
-    """
-    sql_total = """ 
-    SELECT users., count(*)
-    FROM projects
-    JOIN users USING (user_id)
-    WHERE users.ravelry_un = :username
-    GROUP BY user_id;
-    """
-    sums = db.session.execute(sql_sums, {"username": session['user_name']}).fetchall()
-    # sums is a list of tuples, (pattern_type, sum)
-    total = db.session.execute(sql_sums, {"username": session['user_name']}).fetchone()
-    #total is a tuple (username, total)
-
-
-@app.route("/") 
+@app.route('/') 
 def homepage():
     """ Render homepage. """
 
     return render_template('homepage.html')
 
 
-@app.route("/rav-data", methods=['POST'])
+@app.route('/rav-data', methods=['POST'])
 def get_users_rav_data():
     """ Grab user's personal ravelry data. """
     username = request.form.get('username')
@@ -173,7 +39,7 @@ def get_users_rav_data():
         return redirect('/')
 
 
-@app.route("/users-categories.json")
+@app.route('/users-categories.json')
 def jsonify_user_patterns():
     """ Returns jsonified user_patts. """
     user_patts = get_user_patterns()
@@ -181,14 +47,14 @@ def jsonify_user_patterns():
     return jsonify(user_patts)
 
 
-@app.route("/search")
+@app.route('/search')
 def render_search_page():
     """ Display search page to get user search criteria. """
 
     return render_template('search.html')
 
 
-@app.route("/search-data")
+@app.route('/search-data')
 def get_search_criteria():
     """ Save user's search inputs to session. """
     
@@ -202,6 +68,30 @@ def get_search_criteria():
     session['search_results'] = search_results
 
     return redirect('/search-rav') 
+
+@app.route('/pattern-types.json')
+def pattern_types_data():
+    """Return data about User's projets ."""
+    user = User.query.filter_by(ravelry_un=session['username']).first()
+    sums, total = user.calculate_project_stats() #([(pattern_type, sum)...], (username, total)
+    colors = ['#FFDAD6', '#F3E8B4', '#B9E795', '#79DC95', '#5ECED0', '#4666C4', '#7130B9', '#AD1C85', '#A10A13']
+    
+    data_dict = {
+                "labels": [sum[0]for sum in sums],
+                "datasets": [
+                    {
+                        "data": [(sum[1]/total[1])*10 for sum in sums],
+                        "backgroundColor": colors[:len(sums)],
+                        "hoverBackgroundColor": colors[:len(sums)]
+                    }]
+            }
+
+    return jsonify(data_dict)
+
+@app.route('/user')
+def display_user_charts():
+
+    return render_template('userpage.html')
 
 
 def get_user_results():
@@ -223,7 +113,7 @@ def display_search_rav():
     pattern_ids = set(random.choices(session['search_results'], k=6))
     pattern_ids.update(get_user_results())
     user_patts = get_user_patterns()
-            
+
     patterns = [Pattern(patt) 
                 for patt in pattern_ids]
 

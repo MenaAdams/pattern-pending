@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} User Data {% endblock %}
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+{% endblock %}
+{% block body %}
+  <h1>Your Projects (By Percent)</h1>
+    <div class="pattern-chart">
+      <canvas id="donutChart"></canvas>
+      <div id="donutLegend" class="chart-legend"></div>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script>
+    // const options = {
+    //   responsive: true
+    // };
+
+    let ctx_donut = $("#donutChart").get(0).getContext("2d");
+
+    $.get("/pattern-types.json", function (data) {
+      let myDonutChart = new Chart(ctx_donut, {
+                                              type: 'doughnut',
+                                              data: data,
+                                              // options: options
+                                            });
+      $('#donutLegend').html(myDonutChart.generateLegend());
+    });
+  </script>
+{% endblock %}

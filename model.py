@@ -15,6 +15,34 @@ class User(db.Model):
 
         return f"<User user_id={self.user_id} ravelry_un={self.ravelry_un}>"
 
+    def calculate_project_stats(self):
+        """ Calculate percentage of projects by type"""
+
+        sql_sums = """
+        SELECT pattern_type, count(*)
+        FROM projects
+        JOIN users USING (user_id)
+        WHERE users.ravelry_un = :username
+        GROUP BY pattern_type;
+        """
+        sql_total = """ 
+        SELECT user_id, count(*)
+        FROM projects
+        JOIN users USING (user_id)
+        WHERE users.ravelry_un = :username
+        GROUP BY user_id;
+        """
+        sums = db.session.execute(sql_sums, {"username": self.ravelry_un}).fetchall()
+        # sums is a list of tuples, (pattern_type, sum)
+        total = db.session.execute(sql_sums, {"username": self.ravelry_un}).fetchone()
+        #total is a tuple (username, total)
+
+        return (sums, total)
+
+    def calculate_project_status_stats(self):
+        pass
+
+
 
 class Category(db.Model):
     """Hard coded table of user pattern categories. """
