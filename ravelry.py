@@ -15,6 +15,25 @@ class Pattern:
         self.url = self.url + self.permalink
         self.photo = pattern_info['photos'][0]['medium2_url']
 
+    def to_dict(self):
+        """ Return a dictionary representation of a pattern. """
+
+        return {
+                "name": self.name,
+                "pattern_id": self.pattern_id,
+                "url": self.url,
+                "photo": self.photo
+            } 
+
+
+class Project(Pattern):
+
+    def __init__(self, name, pattern_id, link, photo):
+        self.name = name
+        self.pattern_id = pattern_id
+        self.url = link
+        self.photo = photo
+
 
 def save_users_rav_data(username):
     """ Adds patterns in users queue, favorites, and library to database. """
@@ -119,6 +138,7 @@ def get_user_patterns():
 
     return user_patts
 
+
 def get_user_results():
     """ Returns user specific results from session """
     pattern_ids = set()
@@ -130,3 +150,20 @@ def get_user_results():
                 pattern_ids.add(patt)  
 
     return pattern_ids
+
+
+def parse_project_search(projects_results):
+    """ Return list of project objects. """
+    projects = []
+
+    for result in projects_results:
+        if result['pattern_id']:
+            name = result['pattern_name']
+            pattern_id = result['pattern_id']
+            photo = result['first_photo']['medium2_url']
+            link = result['links']['self']['href']
+            project = Project(name, pattern_id, link, photo)
+            projects.append(project)
+
+    return projects
+    

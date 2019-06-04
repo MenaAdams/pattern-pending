@@ -38,24 +38,30 @@ class SearchFilter extends React.Component {
     return (       
         <div id="root">
         <button 
-          name="yarn-search" id="yarn-search" value="yarn-dropdown" 
+          id="yarn-weight" value="yarn-dropdown" 
           onClick={this.handleClick}
         >
         Yarn Weight!
         </button>
         <button 
-          name="patt-type-button" id ="patt-type-button" value="pattern-dropdown"
+          id="yarn-brand" value="yarn-brand" 
+          onClick={this.handleClick}>
+        Yarn Brand!
+        </button>
+        <button 
+          id ="patt-type-button" value="pattern-dropdown"
           onClick={this.handleClick}
         >
         Item!
         </button>
         <button 
-          name="search_w_both" id="search_w_both" value="both"
+          id="search-w-both" value="both"
           onClick={this.handleClick}
         >
         Both!
         </button>
-        <form action="/search-data" id="search-form" hidden={this.state.activeForm === ""}>
+        <form action="/search-data" id="search-patterns" 
+          hidden={this.state.activeForm === "" || this.state.activeForm === "yarn-brand"}>
           <div
             id="yarn-dropdown"
             hidden={this.state.activeForm === 'pattern-dropdown'}
@@ -66,7 +72,6 @@ class SearchFilter extends React.Component {
                 {yarnOptions}
             </select>
           </div>
-
           <div 
             id="pattern_dropdown"
             hidden={this.state.activeForm === 'yarn-dropdown'} 
@@ -78,6 +83,17 @@ class SearchFilter extends React.Component {
             </select>
           </div>
 
+          <input type="submit"/>
+        </form>
+        <form action="/search-projects" id="search-projects"
+          hidden={this.state.activeForm !== 'yarn-brand'}>
+          <div
+            id="yarn-brand"
+            hidden={this.state.activeForm !== 'yarn-brand'}
+          >
+            <h2 className="yarn">What brand of yarn do you want to use?</h2><br/>
+            <input name="yarn-brand" type="text" className="yarn-brand typeahead"/>
+          </div>
           <input type="submit"/>
         </form>
         </div>

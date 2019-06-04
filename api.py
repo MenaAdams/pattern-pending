@@ -29,7 +29,7 @@ def get_from_ravelry(get_type, search_params, response_key):
     return processed_info
 
 
-def search_rav(search_params):
+def search_patterns(search_params):
     """ Return list of pattern ids that match search criteria. """
 
     search_url = 'patterns/search.json'
@@ -40,6 +40,15 @@ def search_rav(search_params):
                     for result in search_results]
     
     return search_patts
+
+
+def search_projects(search_params):
+    """ Returns list of projects that match criteria """
+
+    projects_url = 'projects/search.json'
+    search_results = get_from_ravelry(projects_url, search_params, 'projects')
+
+    return search_results
 
 
 def get_user_favs(username):
