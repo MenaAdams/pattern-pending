@@ -2,24 +2,33 @@ class RenderPatterns extends React.Component {
     constructor() {
       super();
       this.state = {
-        patterns: []
+        patterns: [],
+        userPatterns: ''
       };
     }
 
     componentDidMount() {
-      fetch('/search-patterns.json')
+      console.log("i'm mounting a component!")
+      fetch('/search-results.json')
         .then(res => res.json())
         .then(patterns => {
           this.setState({ patterns: patterns });
         });
+      fetch('/users-categories.json')
+        .then(res => res.json())
+        .then(userPatterns => {
+          this.setState({ userPatterns: userPatterns});
+        console.log(this.state.userPatterns);
+        });
     }
 
+  
     render() {
       return (
         <div>
         {this.state.patterns.map(pattern => {
           return (
-            <div className="pattern">
+            <div key={pattern.name} className="pattern">
             <b>{pattern.name}</b><br/>
             <a href={pattern.url}>
             <img src={pattern.photo}/>
@@ -34,7 +43,6 @@ class RenderPatterns extends React.Component {
 
 ReactDOM.render(
   <RenderPatterns />,
-  document.getElementById("react")
+  document.getElementById("root")
 );
 
-// <button id="try-again">Try Again?</button>

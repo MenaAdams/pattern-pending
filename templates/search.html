@@ -2,23 +2,20 @@
 {% block title %} Search {% endblock %}
 {% block head %}
 
-<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-<script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
-
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.jquery.js"></script>
 
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
 {% endblock %}
 {% block body %}
 <h1>Search by: </h1>
 <div id="root">
-
-</div>
-<div id="search-results">
 </div>
 
 <script src="static/search.jsx" type="text/babel"></script>

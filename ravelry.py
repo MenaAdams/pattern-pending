@@ -1,7 +1,8 @@
 from model import db, User, Category, User_Category, Project
-from flask import flash, session
+from flask import flash, session, request
 import os
 import api
+
 
 
 class Pattern:
@@ -152,7 +153,7 @@ def get_user_results():
     return pattern_ids
 
 
-def parse_project_search(projects_results):
+def objectify_projects(projects_results):
     """ Return list of project objects. """
     projects = []
 
@@ -167,3 +168,34 @@ def parse_project_search(projects_results):
 
     return projects
     
+
+def search_patterns():
+    """ Search ravelry patterns with user's search parameters, returns None. """
+
+    yarn_type = request.args.get('yarn')
+    pattern_type = request.args.get('pattern_type')
+    search_params = {'craft': 'knitting',
+                    'weight': yarn_type, 
+                    'pc': pattern_type,
+                    }
+    search_results = api.search_patterns(search_params) 
+    return search_results
+
+
+def search_projects():
+    """ """
+    print('search projects function')
+    yarn_brand = request.args.get('yarn-brand')
+    search_type = request.args.get('search-type')
+    search_params = {'craft': 'knitting',
+                    'query': f'"{yarn_brand}"'}
+
+    print(search_type,  "is search_type")
+    print(yarn_brand, "is yarn brand")
+    print(search_params)
+
+    projects_results = api.search_projects(search_params)
+    print('going into objectify_projects function')
+    projects = objectify_projects(projects_results)
+
+    return projects

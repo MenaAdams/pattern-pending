@@ -1,13 +1,12 @@
-
 class SearchFilter extends React.Component {
   constructor() {
     super();
 
     this.state = { activeForm: ""};
-    this.handleClick = this.handleClick.bind(this);
+    this.handleFormClick = this.handleFormClick.bind(this);
   }
 
-  handleClick(evt) {
+  handleFormClick(evt) {
     const activeForm = evt.target.value;
     this.setState( {
         activeForm: activeForm    
@@ -38,30 +37,32 @@ class SearchFilter extends React.Component {
     return (       
         <div id="root">
         <button 
-          id="yarn-weight" value="yarn-dropdown" 
-          onClick={this.handleClick}
+          className="yarn-weight" value="yarn-dropdown" 
+          onClick={this.handleFormClick}
         >
         Yarn Weight!
         </button>
         <button 
-          id="yarn-brand" value="yarn-brand" 
-          onClick={this.handleClick}>
+          className="yarn-brand" value="yarn-brand" 
+          onClick={this.handleFormClick}>
         Yarn Brand!
         </button>
         <button 
-          id ="patt-type-button" value="pattern-dropdown"
-          onClick={this.handleClick}
+          className="patt-type-button" value="pattern-dropdown"
+          onClick={this.handleFormClick}
         >
         Item!
         </button>
         <button 
           id="search-w-both" value="both"
-          onClick={this.handleClick}
+          onClick={this.handleFormClick}
         >
         Both!
         </button>
         <form action="/search-data" id="search-patterns" 
           hidden={this.state.activeForm === "" || this.state.activeForm === "yarn-brand"}>
+          <input name="search-type" type="radio" hidden value="pattern"
+          checked={this.state.activeForm !== "" || this.state.activeForm !== "yarn-brand"}/>
           <div
             id="yarn-dropdown"
             hidden={this.state.activeForm === 'pattern-dropdown'}
@@ -85,8 +86,10 @@ class SearchFilter extends React.Component {
 
           <input type="submit"/>
         </form>
-        <form action="/search-projects" id="search-projects"
+        <form action="/search-data" id="search-projects"
           hidden={this.state.activeForm !== 'yarn-brand'}>
+          <input name="search-type" type="radio" hidden value="project"
+          checked={this.state.activeForm === "yarn-brand"}/>
           <div
             id="yarn-brand"
             hidden={this.state.activeForm !== 'yarn-brand'}
@@ -106,4 +109,3 @@ ReactDOM.render(
   <SearchFilter />,
   document.getElementById("root")
 );
-

@@ -12,25 +12,7 @@
 {% endblock %}
 {% block body %}
 <h1>Results!</h1>
-<div id="react"></div>
-
-<div id="patterns">
-<!-- {% for pattern in patterns %}
-
-<div class="pattern">
-  <b>{{ pattern.name }}</b><br>
-  {% for key in user_patts %}
-    {% if pattern.pattern_id in user_patts[key] %}
-      <p>This pattern is in your {{ key }}!</p>
-    {% endif %}
-  {% endfor %}
-  <a href="{{ pattern.url }}">
-    <img src="{{ pattern.photo }}">
-  </a>
-</div>
-
-{% endfor %} -->
-</div>
+<div id="root"></div>
 
 <button id="try-again">Try Again?</button>
 
