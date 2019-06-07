@@ -108,9 +108,18 @@ def get_pattern_by_id(pattern_id):
 
 
 def get_user_projects(username):
-    """ Get all of the user's projects. """
+    """ Return all of the user's projects. """
 
     show_projects = f'projects/{username}/list.json'
     projects_results = get_from_ravelry(show_projects, {}, 'projects')
 
     return projects_results
+
+
+def get_user_stash(username):
+    """ Get yarn names and weights in user's yarn stash"""
+
+    search_yarn = f'people/{username}/stash/list.json'
+    yarn_results = get_from_ravelry(search_yarn, {'sort':'recent'}, 'stash')
+
+    return yarn_results

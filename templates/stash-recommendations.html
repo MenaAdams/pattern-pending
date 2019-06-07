@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Recommendations {% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+{% endblock %}
+{% block body %}
+
+<h1>Recommendations</h1>
+{% for yarn in yarns %}
+    <h2>Based on the {{ yarn.name }} in your stash: </h2>
+
+    <div id="{{ yarn.name }}">
+    {% for pattern in patterns %}
+    <div class="pattern">
+      <b>{{ pattern.name }}</b><br>
+      {% for key in user_patts %}
+        {% if pattern.pattern_id in user_patts[key] %}
+          <p>This pattern is in your {{ key }}!</p>
+        {% endif %}
+      {% endfor %}
+      <a href="{{ pattern.url }}">
+        <img src="{{ pattern.photo }}">
+      </a>
+    </div>
+    {% endfor %}
+    </div>
+{% endfor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% endblock %}

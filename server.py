@@ -8,7 +8,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Category, User_Category, Project
 from ravelry import (Pattern, save_users_rav_data, sort_pattern_type, save_projects_to_db,
     check_database_for_user, get_user_patterns, get_user_results, search_patterns,
-    search_projects)
+    search_projects, objectify_yarn_stash)
 
 
 app = Flask(__name__)
@@ -59,7 +59,6 @@ def render_search_page():
 def get_search_criteria():
     """ Save user's search inputs to session. """
     search_type = request.args.get('search-type')
-    print("search type is", search_type)
 
     if search_type == 'pattern':
         search_results = search_patterns()
@@ -67,68 +66,41 @@ def get_search_criteria():
         search_results = search_projects()
         search_results = [result.to_dict() for result in search_results]
 
-        print("project search results")
-        #projects are already objects
     session['search_results'] = search_results
-    print(session['search_results'])
-    print('search results saved to session=============================')
     session['search_type'] = search_type
 
     return redirect('/search-rav') 
 
 
-# @app.route('/search-projects')
-# def search_projects():
-#     """ """
-#     yarn_brand = request.args.get('yarn-brand')
-#     search_type = request.args.get('search-type')
-#     print(search_type,  "is search_type")
-#     print(yarn_brand, "is yarn brand")
-#     search_params = {'craft': 'knitting',
-#                     'query': f'"{yarn_brand}"'}
-#     print(search_params)
-#     projects_results = api.search_projects(search_params)
-#     projects = parse_project_search(projects_results)
-
-#     return render_template('search-results.html', patterns=projects)
-
-
 @app.route("/search-rav")
 def display_search_rav():
     """ Display search results page.
-    React component on html page """
-    print('rendering search results')
+    React component on html page grabs does the rendering work. """
+
     return render_template('search-results.html')
 
 
 @app.route('/search-results.json')
 def jsonify_pattern_search():
     """ Display random search results plus user relevant patterns. """
-    print('in search-results.json function =================')
+    random_choices = "1" # initialize random_choices
     if session['search_type'] == 'pattern':
         pattern_ids = set(random.choices(session['search_results'], k=6)) #used a set to easily eliminate duplicate results
-        pattern_ids.update(get_user_results()) #maybe only add up to a limited number?
-        user_patts = get_user_patterns()
-        patterns = [Pattern(patt) 
-                    for patt in pattern_ids]
+        user_results = get_user_results()
+        while len(random_choices) < 6:
+            random_choices = pattern_ids
+            pattern_ids.update(random.choices(user_results, k=3)) 
+        patterns = [Pattern(patt) for patt in pattern_ids]
         patterns = [pattern.to_dict() for pattern in patterns]
     else:
-        print('search results json function')
-        print("search results--------------", session['search_results'])
-        patterns = random.choices(session['search_results'], k=6)
-        print("patterns-----------------------", patterns)
-        #how to add user patts?
+        while len(random_choices) < 6:
+            random_choices = random.choices(session['search_results'], k=6)
+            patterns = []
+            for random_choice in random_choices:
+                if random_choice not in patterns:
+                    patterns.append(random_choice)
 
     return jsonify(patterns)
-
-
-@app.route('/search-projects.json')
-def jsonify_project_search():
-    """sdf """
-
-    pattern_selections = set(random.choices(session['search_results'], k=6))
-    #how to add user patts?
-    return jsonify([pattern.to_dict() for pattern in pattern_selections])
 
 
 @app.route('/pattern-types.json')
@@ -147,7 +119,7 @@ def get_pattern_types_data():
                         "backgroundColor": colors[:len(sums)],
                         "hoverBackgroundColor": colors[:len(sums)]
                     }]
-            }
+                }
 
     return jsonify(data_dict)
 
@@ -157,8 +129,7 @@ def get_completion_status_data():
     """Return data about User's projets ."""
     user = User.query.filter_by(ravelry_un=session['username']).first()
     sums, total = user.calculate_project_status_stats() #([(completion_status, sum),...], total)
-    colors = ['#A10A13', '#79DC95', '#4666C4', '#FFDAD6']
-    
+    colors = ['#79DC95', '#4666C4', '#FFDAD6', '#A10A13']
     data_dict = {
                 "labels": [sum[0]for sum in sums],
                 "datasets": [
@@ -167,21 +138,45 @@ def get_completion_status_data():
                         "backgroundColor": colors[:len(sums)],
                         "hoverBackgroundColor": colors[:len(sums)]
                     }]
-            }
+                }
 
     return jsonify(data_dict)   
 
-@app.route('/user')
-def display_user_charts():
+
+@app.route('/<username>')
+def display_user_charts(username):
+    """ Render html page that displays user data charts. """
 
     return render_template('userpage.html')
 
+
+@app.route('/recommendations')
+def display_user_recommendations():
+    """ Render html page that shows user  """
+    yarn_stash = api.get_user_stash(session['username'])
+    yarns = objectify_yarn_stash(yarn_stash)
+    yarns = yarns[:2] #save first two yarns
+    patterns = []
+    user_results = get_user_results()
+
+    for yarn in yarns:
+        search_params = {'craft': 'knitting', 'weight': yarn.weight}
+        search_results = api.search_patterns(search_params)
+        pattern_ids = set(random.choices(search_results, k=6)) #used a set to easily eliminate duplicate results
+        pattern_ids.update(random.choices(user_results, k=3)) 
+        patterns = [Pattern(patt) for patt in pattern_ids]
+
+    return render_template('stash-recommendations.html', 
+                            patterns=patterns, 
+                            yarns=yarns,
+                            user_patts=user_results)
 
 
 
 
 if __name__ == "__main__":
     app.debug=True
+    DebugToolbarExtension(app)
     connect_to_db(app)
     app.run(host="0.0.0.0")
-    DebugToolbarExtension(app)
+    

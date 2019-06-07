@@ -1,4 +1,3 @@
-
 $("#try-again").on("click", () => {
-    $("#patterns").load("/search-rav #patterns")
+    $("#root").load("/search-results.json")
 });

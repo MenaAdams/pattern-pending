@@ -1,27 +1,16 @@
 class RenderPatterns extends React.Component {
     constructor() {
       super();
-      this.state = {
-        patterns: [],
-        userPatterns: ''
-      };
+      this.state = {patterns: []};
     }
 
     componentDidMount() {
-      console.log("i'm mounting a component!")
       fetch('/search-results.json')
         .then(res => res.json())
         .then(patterns => {
-          this.setState({ patterns: patterns });
-        });
-      fetch('/users-categories.json')
-        .then(res => res.json())
-        .then(userPatterns => {
-          this.setState({ userPatterns: userPatterns});
-        console.log(this.state.userPatterns);
+          this.setState({patterns: patterns});
         });
     }
-
   
     render() {
       return (

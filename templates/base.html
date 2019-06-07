@@ -2,6 +2,7 @@
 <head>
 <title>{% block title %} {% endblock %}</title>
 {% block head %}
+<link rel="stylesheet" href="/static/styles.css">
 {% endblock %}
 </head>
 <body>
@@ -10,8 +11,6 @@
   {% endfor %}
   {% block body %}
   {% endblock %}
-</div>
-
 </body>
 <footer>
   {% block footer %}

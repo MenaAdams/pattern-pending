@@ -3,8 +3,6 @@ from flask import flash, session, request
 import os
 import api
 
-
-
 class Pattern:
     url = 'https://www.ravelry.com/patterns/library/'
 
@@ -35,6 +33,20 @@ class Project(Pattern):
         self.url = link
         self.photo = photo
 
+
+class Yarn():
+
+    def __init__(self, yarn_line, yarn_brand, yarn_weight):
+        self.name = f'{yarn_brand} {yarn_line}' 
+        self.weight = yarn_weight.lower()
+    
+    def to_dict(self):
+        """ Return a dictionary representation of a pattern. """
+
+        return {
+                "name": self.name,
+                "weight": self.weight
+            } 
 
 def save_users_rav_data(username):
     """ Adds patterns in users queue, favorites, and library to database. """
@@ -150,7 +162,7 @@ def get_user_results():
             if patt in user_patts[category]: 
                 pattern_ids.add(patt)  
 
-    return pattern_ids
+    return list(pattern_ids)
 
 
 def objectify_projects(projects_results):
@@ -158,13 +170,16 @@ def objectify_projects(projects_results):
     projects = []
 
     for result in projects_results:
-        if result['pattern_id']:
-            name = result['pattern_name']
-            pattern_id = result['pattern_id']
-            photo = result['first_photo']['medium2_url']
-            link = result['links']['self']['href']
-            project = Project(name, pattern_id, link, photo)
-            projects.append(project)
+        try:
+            if result['pattern_id'] and result['first_photo']['medium2_url']:
+                name = result['pattern_name']
+                pattern_id = result['pattern_id']
+                photo = result['first_photo']['medium2_url']
+                link = result['links']['self']['href']
+                project = Project(name, pattern_id, link, photo)
+                projects.append(project)
+        except TypeError:
+            pass
 
     return projects
     
@@ -183,19 +198,28 @@ def search_patterns():
 
 
 def search_projects():
-    """ """
-    print('search projects function')
+    """ Search projects database and return project objects. """
+
     yarn_brand = request.args.get('yarn-brand')
     search_type = request.args.get('search-type')
     search_params = {'craft': 'knitting',
                     'query': f'"{yarn_brand}"'}
 
-    print(search_type,  "is search_type")
-    print(yarn_brand, "is yarn brand")
-    print(search_params)
-
     projects_results = api.search_projects(search_params)
-    print('going into objectify_projects function')
     projects = objectify_projects(projects_results)
 
     return projects
+
+
+def objectify_yarn_stash(yarn_stash):
+
+    yarn_objs = []
+
+    for yarn in yarn_stash:
+        yarn_line = yarn['yarn']['name']
+        yarn_brand = yarn['yarn']['yarn_company']['name']
+        yarn_weight = yarn['yarn']['yarn_weight']['name']
+        yarn = Yarn(yarn_line, yarn_brand, yarn_weight)
+        yarn_objs.append(yarn)
+
+    return yarn_objs

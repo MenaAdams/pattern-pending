@@ -14,10 +14,15 @@
 
 {% endblock %}
 {% block body %}
+<a href="/users/{{ session['username'] }}">
+{{ session['username'] }}
+</a>
+<br>
 <h1>Search by: </h1>
+
 <div id="root">
 </div>
 
 <script src="static/search.jsx" type="text/babel"></script>
-<script src="static/search.js"></script>
+<script async defer src="static/search.js"></script>
 {% endblock %}
