@@ -19,7 +19,7 @@ class RenderPatterns extends React.Component {
           return (
             <div key={pattern.name} className="pattern">
             <b>{pattern.name}</b><br/>
-            <a href={pattern.url}>
+            <a href={pattern.url} target='_blank'>
             <img src={pattern.photo}/>
             </a>
             </div>

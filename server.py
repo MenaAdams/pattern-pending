@@ -59,6 +59,7 @@ def render_search_page():
 def get_search_criteria():
     """ Save user's search inputs to session. """
     search_type = request.args.get('search-type')
+    print(search_type, "=========================================")
 
     if search_type == 'pattern':
         search_results = search_patterns()
@@ -176,7 +177,7 @@ def display_user_recommendations():
 
 if __name__ == "__main__":
     app.debug=True
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
     connect_to_db(app)
     app.run(host="0.0.0.0")
     

@@ -1,9 +1,9 @@
 <html>
 <head>
 <title>{% block title %} {% endblock %}</title>
-{% block head %}
+{% block head %}{% endblock %}
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Pacifico&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/styles.css">
-{% endblock %}
 </head>
 <body>
   {% for msg in get_flashed_messages() %}

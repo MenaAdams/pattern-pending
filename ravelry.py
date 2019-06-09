@@ -25,7 +25,7 @@ class Pattern:
             } 
 
 
-class Project(Pattern):
+class RavelryProject(Pattern):
 
     def __init__(self, name, pattern_id, link, photo):
         self.name = name
@@ -176,7 +176,7 @@ def objectify_projects(projects_results):
                 pattern_id = result['pattern_id']
                 photo = result['first_photo']['medium2_url']
                 link = result['links']['self']['href']
-                project = Project(name, pattern_id, link, photo)
+                project = RavelryProject(name, pattern_id, link, photo)
                 projects.append(project)
         except TypeError:
             pass
@@ -201,10 +201,16 @@ def search_projects():
     """ Search projects database and return project objects. """
 
     yarn_brand = request.args.get('yarn-brand')
-    search_type = request.args.get('search-type')
-    search_params = {'craft': 'knitting',
-                    'query': f'"{yarn_brand}"'}
+    yarn_type = request.args.get('yarn')
+    pattern_type = request.args.get('pattern_type')
+    search_types = [('craft','knitting'), 
+                    ('query', yarn_brand), 
+                    ('weight', yarn_type), 
+                    ('pc', pattern_type)]
 
+    search_params = {key:val for key,val in search_types if val} 
+    #adds search params to dict if an input was caught by form
+    print("+++++++++++++++++++", search_params,"++++++++++++++")
     projects_results = api.search_projects(search_params)
     projects = objectify_projects(projects_results)
 

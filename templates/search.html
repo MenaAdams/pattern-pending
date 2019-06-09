@@ -14,7 +14,7 @@
 
 {% endblock %}
 {% block body %}
-<a href="/users/{{ session['username'] }}">
+<a href="/{{ session['username'] }}">
 {{ session['username'] }}
 </a>
 <br>
@@ -24,5 +24,5 @@
 </div>
 
 <script src="static/search.jsx" type="text/babel"></script>
-<script async defer src="static/search.js"></script>
+<!-- <script async defer src="static/search.js"></script> -->
 {% endblock %}
