@@ -2,15 +2,21 @@
 <head>
 <title>{% block title %} {% endblock %}</title>
 {% block head %}{% endblock %}
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:700|Pacifico&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
+<div class="page-border"></div>
+<div class="header">
+    <img id="logo" alt="pattern-pending-logo" src="static/logo.png">
+    {% block header %} {% endblock%}
+</div>
   {% for msg in get_flashed_messages() %}
     <div class="alert alert-info">{{ msg }}</div>
   {% endfor %}
   {% block body %}
   {% endblock %}
+<div class="page-border"></div>
 </body>
 <footer>
   {% block footer %}

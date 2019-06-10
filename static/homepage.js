@@ -1,8 +1,8 @@
 const form = `
 <form action="/rav-data" method="POST">
   <label for="username">Ravelry Username:</label>
-  <input type="text" name="username" id="username" placeholder="Username">
-  <input type="submit">
+  <input type="text" name="username" class="text" id="username" placeholder="Username">
+  <input type="submit" class="submit-button">
 </form>`
 
 function usernameForm(evt) {
@@ -10,7 +10,6 @@ function usernameForm(evt) {
 }
 
 function ravelrySignUp(evt){
-  alert('woooooo');
   $('#no-rav-account').toggle();
 }
 
