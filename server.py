@@ -164,7 +164,7 @@ def display_user_recommendations():
         search_params = {'craft': 'knitting', 'weight': yarn.weight}
         search_results = api.search_patterns(search_params)
         pattern_ids = set(random.choices(search_results, k=6)) #used a set to easily eliminate duplicate results
-        pattern_ids.update(random.choices(user_results, k=3)) 
+        # pattern_ids.update(random.choices(user_results, k=3)) 
         patterns = [Pattern(patt) for patt in pattern_ids]
 
     return render_template('stash-recommendations.html', 
