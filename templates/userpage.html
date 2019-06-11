@@ -7,6 +7,12 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 {% endblock %}
+<div id="user-profile">
+  <a href="/{{ session['username'] }}">
+    {{ session['username'] }}
+  </a>
+</div>
+{% endblock %}
 {% block body %}
   <h1>Your Projects (By Percent)</h1>
     <div class="pattern-chart">

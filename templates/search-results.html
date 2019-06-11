@@ -10,6 +10,13 @@
 <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
 {% endblock %}
+{% block header %}
+<div id="user-profile">
+  <a href="/{{ session['username'] }}">
+    {{ session['username'] }}
+  </a>
+</div>
+{% endblock %}
 {% block body %}
 <h1>Results!</h1>
 <div id="root"></div>
