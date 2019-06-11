@@ -109,7 +109,7 @@ def get_pattern_types_data():
     """Return data about User's projets ."""
     user = User.query.filter_by(ravelry_un=session['username']).first()
     sums, total = user.calculate_project_stats() #([(pattern_type, sum),...], total)
-    colors = ['#FFDAD6', '#F3E8B4', '#B9E795', '#79DC95', 
+    colors = ['#FE1F69', '#F3E8B4', '#B9E795', '#79DC95', 
             '#5ECED0', '#4666C4', '#7130B9', '#AD1C85', '#A10A13']
     
     data_dict = {

@@ -7,6 +7,7 @@
   integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
   crossorigin="anonymous"></script>
 {% endblock %}
+{% block header %}
 <div id="user-profile">
   <a href="/{{ session['username'] }}">
     {{ session['username'] }}
@@ -14,6 +15,7 @@
 </div>
 {% endblock %}
 {% block body %}
+<div id="body-content">
   <h1>Your Projects (By Percent)</h1>
     <div class="pattern-chart">
       <canvas id="patternChart"></canvas>
@@ -25,21 +27,21 @@
     <canvas id="completionChart"></canvas>
     <div id="donutLegend" class="chart-legend"></div>
   </div>
-
+</div>
 {% endblock %}
 
 {% block footer %}
   <script>
-    // const options = {
-    //   responsive: true
-    // };
+    const options = {
+      responsive: true
+    };
 
     let ctx_donut = $("#patternChart").get(0).getContext("2d");
     $.get("/pattern-types.json", function (data) {
       let myDonutChart = new Chart(ctx_donut, {
                                               type: 'doughnut',
                                               data: data,
-                                              // options: options
+                                              options: options
                                             });
       // $('#donutLegend').html(myDonutChart.generateLegend());
     });

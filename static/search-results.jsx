@@ -17,12 +17,12 @@ class RenderPatterns extends React.Component {
         <div>
         {this.state.patterns.map(pattern => {
           return (
-            <div key={pattern.name} className="pattern">
-            <b>{pattern.name}</b><br/>
             <a href={pattern.url} target='_blank'>
+            <div key={pattern.name} className="pattern">
             <img src={pattern.photo}/>
-            </a>
+            <h3>{pattern.name}</h3><br/>
             </div>
+            </a>
           );
         })}
         </div>

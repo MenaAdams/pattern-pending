@@ -21,6 +21,10 @@ body {
     background-image: radial-gradient(circle, #FFFFFF, #FFF5ED);
     color: #696868;
 }
+
+#body-content {
+    padding: 100px 0;
+}
 /* end base styles */
 
 /* header styles */
@@ -72,7 +76,7 @@ div.no-rav-account button {
 }
 /*end search page specific styling*/
 
-
+/*button styling*/
 button {
     background-color: #FE1F69;
     width: 200px;
@@ -91,7 +95,9 @@ button {
 .search-data {
     font-size: 30px;
 }
+/*end button styling*/
 
+/*input styling*/
 label {
     font-family: 'Pacifico', cursive;
     font-size: 45px;
@@ -100,14 +106,17 @@ label {
 input[type=text] {
     border: 1px solid #979797;
     border-radius: 10px; 
+    padding-left: 20px;
     width: 400px;
     height: 60px;
     margin-left: 20px;
     font-family: 'Open Sans', sans-serif;
     font-size: 30px;
+    color: #979797;
+    box-shadow: 2px 0px 3px #979797;
 }
 
-input[type=option] {
+select {
     border: 1px solid #979797;
     border-radius: 10px; 
     width: 400px;
@@ -119,14 +128,16 @@ input[type=option] {
 
 input[type=submit] {
     background-color: #FE1F69;
-    width: 200px;
-    height: 100px;
+    width: 150px;
+    height: 59px;
     border-radius: 10px;
+    padding-left: 20px;
     border: 5px solid #B61846;
     box-shadow: 3px 1px 3px #B61846;
     font-family: 'Pacifico', cursive;
-    font-size: 45px;
+    font-size: 30px;
     color: #FFFFFF;
     align-content: center;
     margin: 26px;
 }
+/*end input styling*/

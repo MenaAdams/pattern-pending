@@ -2,7 +2,7 @@ class SearchFilter extends React.Component {
   constructor() {
     super();
 
-    this.state = { activeForm: "", searchType: ""};
+    this.state = { activeForm: "", searchType: "" };
     this.handleFormClick = this.handleFormClick.bind(this);
     this.handleTypeClick = this.handleTypeClick.bind(this);
   }
@@ -17,6 +17,10 @@ class SearchFilter extends React.Component {
     const searchType = evt.target.value;
     this.setState({searchType: searchType});
     console.log(searchType);
+  }
+
+  changeOpacityClick(evt) {
+
   }
 
   render() {
@@ -42,47 +46,54 @@ class SearchFilter extends React.Component {
 
     return (       
       <div id="root">
-        <button
-          className="patt-button"
-          value="pattern"
-          onClick={this.handleTypeClick}>
-        Patterns
-        </button>
-        <button
-          className="proj-button"
-          value="project"
-          onClick={this.handleTypeClick}>
-        Projects
-        </button>
-        <br/>
-        <button 
-          className="yarn-weight" value="yarn-dropdown" 
-          hidden={this.state.searchType === ""}
-          onClick={this.handleFormClick}
-        >
-        Yarn Weight!
-        </button>
-        <button 
-          className="yarn-brand" value="yarn-brand" 
-          hidden={this.state.searchType !== "project"}
-          onClick={this.handleFormClick}
+        <div id="search-types">
+          <button
+            className="type-button"
+            value="pattern"
+            onClick={this.handleTypeClick}
           >
-        Yarn Brand!
-        </button>
-        <button 
-          className="patt-type-button" value="pattern-dropdown"
-          hidden={this.state.searchType === ""}
-          onClick={this.handleFormClick}
-        >
-        Item!
-        </button>
-        <button 
-          id="search-w-both" value="both"
-          hidden={this.state.searchType === ""}
-          onClick={this.handleFormClick}
-        >
-        Yarn Weight & Item!
-        </button>
+          Patterns
+          </button>
+          or
+          <button
+            className="type-button"
+            value="project"
+            onClick={this.handleTypeClick}
+          >
+          Projects
+          </button>
+        </div>
+        <br/>
+        <div id="search-categories">
+          <button 
+            className="search-data" value="yarn-dropdown" 
+            hidden={this.state.searchType === ""}
+            onClick={this.handleFormClick}
+          >
+          Yarn Weight
+          </button>
+          <button 
+            className="search-data" value="yarn-brand" 
+            hidden={this.state.searchType !== "project"}
+            onClick={this.handleFormClick}
+          >
+          Yarn Brand
+          </button>
+          <button 
+            className="search-data" value="pattern-dropdown"
+            hidden={this.state.searchType === ""}
+            onClick={this.handleFormClick}
+          >
+          Item
+          </button>
+          <button 
+            className="search-data" value="both"
+            hidden={this.state.searchType === ""}
+            onClick={this.handleFormClick}
+          >
+          Yarn & Item
+          </button>
+        </div>
         <form action="/search-data" id="search-patterns" 
           hidden={this.state.activeForm === ""}>
 
@@ -93,32 +104,34 @@ class SearchFilter extends React.Component {
             id="yarn-dropdown"
             hidden={this.state.activeForm === 'pattern-dropdown' || this.state.activeForm === 'yarn-brand'}
           >
-            <h2 className="yarn">What kind of yarn do you want to use?</h2>
-            <select name="yarn" className="yarn">
-              <option value="">Yarn</option>
-              {yarnOptions}
-            </select>
+            <label for="yarn">Enter Yarn Weight
+              <select name="yarn" className="yarn">
+                <option value="">Yarn</option>
+                {yarnOptions}
+              </select>
+            </label>
           </div>
 
           <div
             id="yarn-brand"
             hidden={this.state.activeForm !== 'yarn-brand'}
           >
-            <h2 className="yarn">What brand of yarn do you want to use?</h2><br/>
-            <input name="yarn-brand" type="text" className="yarn-brand"/>
+            <label for="yarn-brand">Enter Yarn Brand
+              <input name="yarn-brand" type="text" className="yarn-brand"/>
+            </label>
           </div>
 
           <div 
             id="pattern_dropdown"
             hidden={this.state.activeForm === 'yarn-dropdown' || this.state.activeForm === 'yarn-brand'} 
           >
-            <h2 className="pattern_type">What kind of item do you want to make?</h2>
-            <select name="pattern_type" className="pattern_type">
-              <option value="">Item</option>
-              {patternOptions}
-            </select>
+            <label for="pattern_type">Enter Item
+              <select name="pattern_type" className="pattern_type">
+                <option value="">Item</option>
+                {patternOptions}
+              </select>
+            </label>
           </div>
-
           <input type="submit"/>
         </form>
       </div>
