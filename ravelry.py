@@ -210,7 +210,6 @@ def search_projects():
 
     search_params = {key:val for key,val in search_types if val} 
     #adds search params to dict if an input was caught by form
-    print("+++++++++++++++++++", search_params,"++++++++++++++")
     projects_results = api.search_projects(search_params)
     projects = objectify_projects(projects_results)
 
