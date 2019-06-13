@@ -50,6 +50,10 @@ img.logo {
     font-size: 30px;
 }
 
+a:hover {
+    color: black;
+}
+
 /*end header styling*/
 
 /*homepage styling*/
@@ -131,7 +135,7 @@ input[type=submit] {
     width: 150px;
     height: 59px;
     border-radius: 10px;
-    padding-left: 20px;
+    cursor: pointer;
     border: 5px solid #B61846;
     box-shadow: 3px 1px 3px #B61846;
     font-family: 'Pacifico', cursive;
@@ -141,3 +145,56 @@ input[type=submit] {
     margin: 26px;
 }
 /*end input styling*/
+
+/*pattern styling*/
+#search-results {
+    margin: 0 100px;
+}
+
+.pattern-card {
+    width: 220px;
+    height: 300px;
+    margin: 25px;
+    border-radius: 5px;
+    background-color: #FFFFFF;
+    float: left;
+    display: inline-block;
+    box-shadow: 2px 1px 3px #979797; 
+    /*overflow: hidden;*/
+}
+
+div.pattern-card img {
+    height: 250px;
+    padding: 0;
+    margin: 0;
+
+    border-radius: 5px 5px 0 0;
+}
+
+div#search-results a {
+    color: #979797;
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+}
+/*end pattern styling*/
+
+/*donut chart*/
+.donut-chart {
+  width: 710px;
+  height: 355px;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  float: left;  
+}
+
+.donut-chart h1, h2 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.donut-chart canvas {
+  margin: 20px 0;
+}

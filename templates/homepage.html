@@ -9,17 +9,18 @@
 {% endblock %}
 
 {% block body %}
-<div id="homepage">
-  <h1>Do you have a Ravelry Account?</h1>
-  <button name="rav-account" id="yes-button">Yes</button>
-  <button name="rav-account" id="no-button">No</button>
-  <div id="no-rav-account" hidden>
-    <h2>Please sign up for a Ravelry account here:</h2> 
-    <a href="https://www.ravelry.com/" target="_blank">
-      <button>Ravelry</button>
-    </a>
+<div id="body-content">
+  <div id="homepage">
+    <h1>Do you have a Ravelry Account?</h1>
+    <button name="rav-account" id="yes-button">Yes</button>
+    <button name="rav-account" id="no-button">No</button>
+    <div id="no-rav-account" hidden>
+      <h2>Please sign up for a Ravelry account here:</h2> 
+      <a href="https://www.ravelry.com/" target="_blank">
+        <button>Ravelry</button>
+      </a>
+    </div>
   </div>
 </div>
-
 <script src="static/homepage.js"></script>
 {% endblock %}

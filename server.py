@@ -86,20 +86,23 @@ def jsonify_pattern_search():
     """ Display random search results plus user relevant patterns. """
     random_choices = "1" # initialize random_choices
     if session['search_type'] == 'pattern':
-        pattern_ids = set(random.choices(session['search_results'], k=6)) #used a set to easily eliminate duplicate results
+        pattern_ids = set(random.choices(session['search_results'], k=10)) #used a set to easily eliminate duplicate results
         user_results = get_user_results()
-        while len(random_choices) < 6:
+        while len(random_choices) < 10:
             random_choices = pattern_ids
-            pattern_ids.update(random.choices(user_results, k=3)) 
+            pattern_ids.update(random.choices(user_results, k=5)) 
         patterns = [Pattern(patt) for patt in pattern_ids]
         patterns = [pattern.to_dict() for pattern in patterns]
     else:
-        while len(random_choices) < 6:
-            random_choices = random.choices(session['search_results'], k=6)
-            patterns = []
-            for random_choice in random_choices:
-                if random_choice not in patterns:
-                    patterns.append(random_choice)
+        if len(session['search_results']) > 10:
+            while len(random_choices) < 10:
+                random_choices = random.choices(session['search_results'], k=10)
+                patterns = []
+                for random_choice in random_choices:
+                    if random_choice not in patterns:
+                        patterns.append(random_choice)
+        else:
+            patterns = session['search_results']
 
     return jsonify(patterns)
 
@@ -130,7 +133,7 @@ def get_completion_status_data():
     """Return data about User's projets ."""
     user = User.query.filter_by(ravelry_un=session['username']).first()
     sums, total = user.calculate_project_status_stats() #([(completion_status, sum),...], total)
-    colors = ['#79DC95', '#4666C4', '#FFDAD6', '#A10A13']
+    colors = ['#5ECED0', '#4666C4', '#7130B9', '#AD1C85']
     data_dict = {
                 "labels": [sum[0]for sum in sums],
                 "datasets": [

@@ -15,25 +15,32 @@
 </div>
 {% endblock %}
 {% block body %}
-<div id="body-content">
-  <h1>Your Projects (By Percent)</h1>
-    <div class="pattern-chart">
-      <canvas id="patternChart"></canvas>
-      <div id="donutLegend" class="chart-legend"></div>
-    </div>
-
-  <h1>Your Project Progress (By Percent)</h1>
-  <div class="completion-chart">
-    <canvas id="completionChart"></canvas>
-    <div id="donutLegend" class="chart-legend"></div>
+  <div class="donut-chart">
+    <h1>Your Projects</h1> 
+    <h2>(By Percent)</h2>
+    <canvas id="patternChart"></canvas>
   </div>
-</div>
+
+  <div class="donut-chart">
+    <h1>Your Project Progress</h1>
+    <h2>(By Percent)</h2>
+    <canvas id="completionChart"></canvas>
+  </div>
 {% endblock %}
 
 {% block footer %}
   <script>
     const options = {
-      responsive: true
+      'responsive': true,
+      'aspectRatio': 2,
+      'legend': {
+        'position': 'right',
+        'labels': {
+          'boxWidth': 40,
+          'fontSize': 20, 
+          'padding': 20
+        }
+      }
     };
 
     let ctx_donut = $("#patternChart").get(0).getContext("2d");
@@ -43,7 +50,6 @@
                                               data: data,
                                               options: options
                                             });
-      // $('#donutLegend').html(myDonutChart.generateLegend());
     });
 
     let ctx_donut2 = $("#completionChart").get(0).getContext("2d");
@@ -51,9 +57,8 @@
       let myDonutChart = new Chart(ctx_donut2, {
                                               type: 'doughnut',
                                               data: data,
-                                              // options: options
+                                              options: options
                                             });
-      // $('#donutLegend').html(myDonutChart.generateLegend());
     });
   </script>
 {% endblock %}
