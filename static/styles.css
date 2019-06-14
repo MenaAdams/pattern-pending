@@ -195,19 +195,24 @@ div#search-results a {
   margin: 0 auto;
   width: 125px;
   height: 125px;
-  animation: bounce 0.75s cubic-bezier(.5,0.05,1,.5);
-  animation-direction: alternate;
+  animation: spin 2.5s linear;
   animation-iteration-count: infinite;
 }
 
-@keyframes bounce {
-  from { transform: translate3d(0, 0, 0) rotate(360deg);     }
-  to   { transform: translate3d(0, 200px, 0); }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-/* cant decide on which animation, keeping this one in case i change my mind*/
+
+/* cant decide on which animation*/
+@keyframes bounce {
+  0% { transform: translate3d(0, 0, 0) rotate(360deg); }
+  100%   { transform: translate3d(0, 200px, 0); }
+}
+
 @keyframes roll {
-   0% { opacity: 1; transform: translateX(800%) rotate(360deg); }
-   100% { opacity: 1; transform: translateX(0px) rotate(0deg); } 
+   0% { transform: translateX(800%) rotate(360deg); }
+   100% { transform: translateX(0px) rotate(0deg); } 
 }
 /*end loading animation*/
 
