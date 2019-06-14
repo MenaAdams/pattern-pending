@@ -21,13 +21,14 @@ class RenderPatterns extends React.Component {
         return (
         <div class="loading">
           <h1>Loading Results</h1>
-          <img src="static/loading-cat.svg" />
+          <div id="loading-yarn"></div>
         </div>
         );
       }
 
       return (
         <div id="search-results">
+        <h1>Results!</h1>
         {this.state.patterns.map(pattern => {
           return (
             <a href={pattern.url} target="_blank">

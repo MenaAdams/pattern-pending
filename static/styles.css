@@ -73,6 +73,8 @@ div.no-rav-account button {
     color: #696868;
     font-family: 'Pacifico', cursive;
     font-size: 45px;
+    padding: 0;
+    margin: 0;
 }
 
 #seach-types {
@@ -148,7 +150,7 @@ input[type=submit] {
 
 /*pattern styling*/
 #search-results {
-    margin: 0 100px;
+    margin: 0 50px;
 }
 
 .pattern-card {
@@ -170,6 +172,10 @@ div.pattern-card img {
     border-radius: 5px 5px 0 0;
 }
 
+div.pattern-card h3 {
+  margin: 10px;
+}
+
 div#search-results a {
     color: #979797;
     font-size: 20px;
@@ -179,57 +185,30 @@ div#search-results a {
 /*end pattern styling*/
 
 /*loading animation*/
-/*div.loading {
-  background-image: url('static/yarn-icon.png');
-  background-size: auto 100%;
-  width: 352px;
-  height: 500px;
-  will-change: background-position;
-  
-    width: 100px;
-  height: 100px;
-  border-radius: 50%;         
-  background-color: #FF5722; 
-
-  animation-name: bounce;
-  animation-duration: 1s;
-  animation-delay: -0.5s;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
-}*/
-
 .loading:empty {
   display: inline-block;
-  background-image: url('loading-cat.svg')
-  /*background-size: cover;*/
-/*  transform: translateZ(1px);*/
-}
-/*.loading > div {
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  margin: 6px;
-  border-radius: 50%;
-  background: #FF5722;
-  animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-}
-*/
-@keyframes lds-circle {
-  0%, 100% {
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
-  }
-  0% {
-    transform: rotateY(0deg);
-  }
-  50% {
-    transform: rotateY(1800deg);
-    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
-  }
-  100% {
-    transform: rotateY(3600deg);
-  }
 }
 
+#loading-yarn {
+  background-image: url('yarn-icon.png');
+  background-size: auto 100%;
+  margin: 0 auto;
+  width: 125px;
+  height: 125px;
+  animation: bounce 0.75s cubic-bezier(.5,0.05,1,.5);
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+@keyframes bounce {
+  from { transform: translate3d(0, 0, 0) rotate(360deg);     }
+  to   { transform: translate3d(0, 200px, 0); }
+}
+/* cant decide on which animation, keeping this one in case i change my mind*/
+@keyframes roll {
+   0% { opacity: 1; transform: translateX(800%) rotate(360deg); }
+   100% { opacity: 1; transform: translateX(0px) rotate(0deg); } 
+}
 /*end loading animation*/
 
 /*donut chart*/
