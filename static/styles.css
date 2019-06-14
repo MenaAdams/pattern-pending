@@ -99,6 +99,7 @@ button {
 }
 
 .search-data {
+    margin-top: 15px;
     font-size: 30px;
 }
 /*end button styling*/
@@ -235,3 +236,20 @@ div#search-results a {
 .donut-chart canvas {
   margin: 20px 0;
 }
+/*end donut chart*/
+
+/*#footer {
+  background-color: #696868;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin-top: 50px;
+  width: 100%;
+  text-align: center;
+}
+
+#footer a {
+  color: #FFFFFF;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 30px;
+}*/
