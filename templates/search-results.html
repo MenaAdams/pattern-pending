@@ -19,7 +19,13 @@
 {% endblock %}
 {% block body %}
   <h1>Results!</h1>
-  <div id="root"></div>
+
+  <div id="root" class="loading">
+        <!-- <div class="loading">
+            <h1>Loading Results</h1>
+            <img src="static/loading-cat.svg">
+        </div> -->
+  </div>
 {% endblock %}
 {% block footer %}
 <script src="static/search-results.jsx" type="text/babel"></script>

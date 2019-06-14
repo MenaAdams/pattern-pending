@@ -152,7 +152,7 @@ input[type=submit] {
 }
 
 .pattern-card {
-    width: 220px;
+    width: 200px;
     height: 300px;
     margin: 25px;
     border-radius: 5px;
@@ -177,6 +177,60 @@ div#search-results a {
     margin: 0;
 }
 /*end pattern styling*/
+
+/*loading animation*/
+/*div.loading {
+  background-image: url('static/yarn-icon.png');
+  background-size: auto 100%;
+  width: 352px;
+  height: 500px;
+  will-change: background-position;
+  
+    width: 100px;
+  height: 100px;
+  border-radius: 50%;         
+  background-color: #FF5722; 
+
+  animation-name: bounce;
+  animation-duration: 1s;
+  animation-delay: -0.5s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}*/
+
+.loading:empty {
+  display: inline-block;
+  background-image: url('loading-cat.svg')
+  /*background-size: cover;*/
+/*  transform: translateZ(1px);*/
+}
+/*.loading > div {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin: 6px;
+  border-radius: 50%;
+  background: #FF5722;
+  animation: lds-circle 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+*/
+@keyframes lds-circle {
+  0%, 100% {
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+  }
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(1800deg);
+    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+  }
+  100% {
+    transform: rotateY(3600deg);
+  }
+}
+
+/*end loading animation*/
 
 /*donut chart*/
 .donut-chart {
