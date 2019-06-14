@@ -218,8 +218,8 @@ div#search-results a {
 
 /*donut chart*/
 .donut-chart {
-  width: 710px;
-  height: 355px;
+  width: 675px;
+  height: 350px;
   padding: 0;
   margin: 0;
   display: inline-block;
